@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.ca77e.rslclanhelp",
+      "sha256_cert_fingerprints": [
+        "DF:33:B2:D1:5C:12:54:45:D5:68:6F:22:A3:4F:81:C0:7E:70:91:62:A3:49:85:7E:4F:B2:AD:DC:D5:91:8D:F9",
+        "6F:4C:24:BC:A2:56:8B:E7:91:AC:F0:0A:BC:1D:DA:8C:71:6A:99:97:3E:5E:BE:90:70:49:DE:90:3A:87:85:36"
+      ]
+    }
+  }
+]
