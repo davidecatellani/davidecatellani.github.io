@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [], 
+    "details": [
+      {
+        "appID": "X63H9CKK54.com.ca77e.rslclanhelp", 
+        "paths": ["/invito*", "/<nome-repository>/invito*"] 
+      }
+    ]
+  }
+}
