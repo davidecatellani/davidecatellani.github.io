@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-G">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invito al Clan RSL Helper</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 90vh; margin: 0; background-color: #f4f4f4; text-align: center; padding: 20px; }
+        .container { background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h1 { color: #333; }
+        p { color: #555; margin-bottom: 30px; }
+        .button-container { display: flex; flex-direction: column; gap: 15px; }
+        .store-button {
+            display: inline-block;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .app-store { background-color: #007aff; color: white; }
+        .app-store:hover { background-color: #005ecb; }
+        .google-play { background-color: #4CAF50; color: white; }
+        .google-play:hover { background-color: #388E3C; }
+        .hidden { display: none; }
+        #loadingMessage { margin-top: 20px; color: #777; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>RSL Clan Helper</h1>
+        <p id="statusMessage">Stiamo cercando di aprire l'app per te...</p>
+        
+        <div id="storeButtons" class="button-container hidden">
+            <p>Sembra che tu non abbia ancora l'app. Scaricala ora!</p>
+            <a href="https://testflight.apple.com/join/4DdEs7SQ" class="store-button app-store" target="_blank">Scarica su App Store</a>
+            <a href="https://play.google.com/store/apps/details?id=com.ca77e.rsl_clan_helper" class="store-button google-play" target="_blank">Scarica su Google Play</a>
+        </div>
+        <p id="loadingMessage">Se l'app non si apre automaticamente, potresti non averla installata.</p>
+    </div>
+
+    <script>
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        window.onload = function() {
+            const clanId = getQueryParam('clanId');
+            const statusMessageEl = document.getElementById('statusMessage');
+            const storeButtonsEl = document.getElementById('storeButtons');
+            const loadingMessageEl = document.getElementById('loadingMessage');
+
+            if (clanId) {
+                const appUrl = `rslclanhelper://join?clanId=${clanId}`; // IL TUO CUSTOM URL SCHEME
+                statusMessageEl.textContent = `Tentativo di unirsi al clan ID: ${clanId}...`;
+                
+                // Tenta di aprire l'app
+                window.location.href = appUrl;
+
+                // Fallback se l'app non si apre dopo un breve ritardo
+                // Questo timeout è un trucco comune; non c'è un modo perfetto per sapere se l'app si è aperta.
+                setTimeout(function() {
+                    // Se siamo ancora su questa pagina dopo il timeout, l'app probabilmente non è installata
+                    // o l'utente ha rifiutato l'apertura.
+                    // Controlliamo se la pagina è ancora visibile per evitare di mostrare i pulsanti se
+                    // l'app si è aperta ma il browser è rimasto in background.
+                    if (!document.hidden) {
+                        statusMessageEl.textContent = "L'app RSL Clan Helper è necessaria.";
+                        loadingMessageEl.classList.add('hidden');
+                        storeButtonsEl.classList.remove('hidden');
+                    }
+                }, 2000); // 2 secondi di timeout
+
+            } else {
+                statusMessageEl.textContent = "ID del clan non specificato nel link.";
+                loadingMessageEl.classList.add('hidden');
+            }
+        };
+    </script>
+</body>
+</html>
+```
+**Importante:**
+* Sostituisci `LINK_AL_TUO_APP_STORE_IOS` e `LINK_AL_TUO_GOOGLE_PLAY_ANDROID` con i link effettivi alle pagine della tua app sugli store una volta pubblicata.
+* Il custom URL scheme usato qui è `rslclanhelper://join?clanId=...`. Dovrai configurarlo nella tua a
