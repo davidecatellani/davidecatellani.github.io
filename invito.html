@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en"> <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invito al Clan - RSL Clan Helper</title> <style>
+        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 90vh; margin: 0; background-color: #f0f2f5; text-align: center; padding: 20px; }
+        .container { background-color: #ffffff; padding: 35px 40px; border-radius: 10px; box-shadow: 0 6px 12px rgba(0,0,0,0.1); max-width: 500px; width: 90%; }
+        h1 { color: #1c1e21; font-size: 24px; margin-bottom: 15px; }
+        p { color: #4b4f56; margin-bottom: 25px; line-height: 1.6; font-size: 16px; }
+        .button-container { display: flex; flex-direction: column; gap: 15px; width: 100%; }
+        .store-button {
+            display: flex; /* Per allineare icona e testo */
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .store-button img { margin-right: 10px; height: 24px; width: 24px; }
+        .app-store { background-color: #007aff; color: white; }
+        .app-store:hover { background-color: #005ecb; }
+        .google-play { background-color: #3ddc84; /* Colore Google Play aggiornato */ color: white; }
+        .google-play:hover { background-color: #30b06a; }
+        .store-button:active { transform: translateY(1px); }
+        #clanInfo { margin-top: 25px; color: #606770; font-size: 14px; }
+        /* Aggiungi qui le icone SVG o usa quelle da CDN/font se preferisci */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 data-lang-key="welcomeTitle">Benvenuto in RSL Clan Helper!</h1>
+        <p data-lang-key="installPrompt">Per unirti al clan, devi prima installare l'app.</p>
+        <div class="button-container">
+            <a id="appStoreLink" href="https://testflight.apple.com/join/4DdEs7SQ" class="store-button app-store" target="_blank">
+                <span data-lang-key="downloadIOS">Scarica su App Store</span>
+            </a>
+            <a id="googlePlayLink" href="https://play.google.com/store/apps/details?id=com.ca77e.rsl_clan_helper" class="store-button google-play" target="_blank">
+                <span data-lang-key="downloadAndroid">Scarica su Google Play</span>
+            </a>
+        </div>
+        <p id="clanInfo" style="margin-top: 20px;"></p>
+    </div>
+
+    <script>
+        // Dizionario delle traduzioni
+        const translations = {
+            en: {
+                welcomeTitle: "Welcome to RSL Clan Helper!",
+                installPrompt: "To join the clan, you need to install the app first.",
+                downloadIOS: "Download on the App Store",
+                downloadAndroid: "Get it on Google Play",
+                joiningClanWithID: "You are about to join the clan with ID:",
+                joiningClanNamed: "You are about to join the clan:"
+            },
+            it: {
+                welcomeTitle: "Benvenuto in RSL Clan Helper!",
+                installPrompt: "Per unirti al clan, devi prima installare l'app.",
+                downloadIOS: "Scarica su App Store",
+                downloadAndroid: "Scarica su Google Play",
+                joiningClanWithID: "Stai per unirti al clan con ID:",
+                joiningClanNamed: "Stai per unirti al clan:"
+            }
+            // Aggiungi altre lingue qui...
+            // es: es: { welcomeTitle: "¡Bienvenido a RSL Clan Helper!", ... }
+        };
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function setLanguage(lang) {
+            const elements = document.querySelectorAll('[data-lang-key]');
+            const langPack = translations[lang] || translations.en; // Fallback a inglese se la lingua non è definita
+
+            elements.forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (langPack[key]) {
+                    element.textContent = langPack[key];
+                }
+            });
+            // Aggiorna il tag lang della pagina
+            document.documentElement.lang = lang.split('-')[0]; // es. 'it' da 'it-IT'
+        }
+
+        window.onload = function() {
+            // Rileva lingua browser
+            let userLang = (navigator.language || navigator.userLanguage || 'en').split('-')[0];
+            if (!translations[userLang]) { // Se la lingua specifica (es. 'it') non c'è, prova la lingua base
+                userLang = 'en'; // Fallback a inglese
+            }
+            setLanguage(userLang);
+
+
+            const clanId = getQueryParam('clanId');
+            const clanName = getQueryParam('clanName'); 
+            const clanInfoEl = document.getElementById('clanInfo');
+            const langPack = translations[userLang] || translations.en;
+
+
+            if (clanName) {
+                clanInfoEl.textContent = `${langPack.joiningClanNamed} ${decodeURIComponent(clanName)}${clanId ? ` (ID: ${clanId})` : ''}`;
+            } else if (clanId) {
+                 clanInfoEl.textContent = `${langPack.joiningClanWithID} ${clanId}`;
+            }
+
+            // Sostituisci con i tuoi link effettivi
+            const appStoreLink = "LINK_APP_STORE_IOS"; 
+            const googlePlayLink = "LINK_GOOGLE_PLAY_ANDROID";
+
+            document.getElementById('appStoreLink').href = appStoreLink;
+            document.getElementById('googlePlayLink').href = googlePlayLink;
+
+            // Non è più necessario il tentativo di aprire l'app con custom scheme qui,
+            // perché App Links / Universal Links dovrebbero aver già gestito l'apertura dell'app
+            // se installata. Questa pagina è il fallback.
+        };
+    </script>
+</body>
+</html>
